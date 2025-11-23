@@ -7,28 +7,52 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { Post } from "@/app/types/post";
 
+import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+);
+
 export default function Page() {
+  const router = useRouter();
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   const [posts, setPosts] = useState<Post[]>([]);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) return;
 
-    // 2. 새 글 추가
+    const { data, error } = await supabase
+      .from("post")
+      .insert([{ title, content }])
+      .select()
+      .single();
+
+    if (error) {
+      console.error(error);
+      alert("글 저장 중 오류가 발생했습니다.");
+      return;
+    }
+
     setPosts((prev) => [
       ...prev,
       {
-        id: Date.now(),
-        title,
-        content,
+        id: data.id,
+        created_at: data.created_at,
+        title: data.title,
+        content: data.content,
       },
     ]);
 
-    // 3. 입력값 초기화
     setTitle("");
     setContent("");
+
+    alert("글이 작성 되었습니다.");
+    router.push("/");
   };
 
   return (
@@ -46,21 +70,6 @@ export default function Page() {
         onChange={(e) => setContent(e.target.value)}
       />
       <Button onClick={handleSubmit}>작성</Button>
-
-      {/* 4. 등록된 글 목록 표시 */}
-      <div style={{ marginTop: 24 }}>
-        <h2>테스트 등록된 글</h2>
-        {posts.length === 0 && <p>아직 등록된 글이 없습니다.</p>}
-        {posts.map((post) => (
-          <div
-            key={post.id}
-            style={{ border: "1px solid #ddd", marginTop: 8, padding: 8 }}
-          >
-            <h3>{post.title}</h3>
-            <p>{post.content}</p>
-          </div>
-        ))}
-      </div>
     </section>
   );
 }
