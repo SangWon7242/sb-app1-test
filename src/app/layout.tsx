@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import localFont from "next/font/local";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,7 +22,38 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${pretendard.variable}`}>{children}</body>
+      <body className={`${pretendard.variable} flex flex-col min-h-screen`}>
+        <header className="top-bar bg-white border-b">
+          <div className="con h-20 flex max-w-[1200px] mx-auto">
+            <div className="logo-box">
+              <Link
+                href={"/"}
+                className="flex h-full items-center text-xl font-bold"
+              >
+                📚 SB 포스팅
+              </Link>
+            </div>
+            <nav className="menu-box ml-auto">
+              <ul className="flex h-full">
+                <li>
+                  <Link
+                    href={"/post"}
+                    className="flex h-full items-center h-full"
+                  >
+                    게시글
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </header>
+        <main className="main flex-1 flex">{children}</main>
+        <footer className="footer h-20 bg-[#afafaf]">
+          <div className="inner h-full flex items-center justify-center text-xl font-bold">
+            copyright ⓒ 2025 SB 포스팅. All rights reserved.
+          </div>
+        </footer>
+      </body>
     </html>
   );
 }
