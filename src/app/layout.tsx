@@ -37,10 +37,18 @@ export default function RootLayout({
               <ul className="flex h-full">
                 <li>
                   <Link
-                    href={"/post"}
+                    href={"/post/write"}
                     className="flex h-full items-center h-full"
                   >
-                    게시글
+                    게시글 작성
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href={"/post/list"}
+                    className="flex h-full items-center h-full"
+                  >
+                    게시글 리스트
                   </Link>
                 </li>
               </ul>
