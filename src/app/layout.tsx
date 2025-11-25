@@ -34,7 +34,7 @@ export default function RootLayout({
               </Link>
             </div>
             <nav className="menu-box ml-auto">
-              <ul className="flex h-full">
+              <ul className="flex h-full gap-x-3">
                 <li>
                   <Link
                     href={"/post/write"}
