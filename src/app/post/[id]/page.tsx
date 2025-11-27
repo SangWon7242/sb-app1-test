@@ -33,7 +33,7 @@ export default async function Page({
 
   return (
     <section className="post-detail flex w-full flex-1">
-      <div className="inner container mx-auto flex flex-col gap-5 py-10 max-w-4xl">
+      <div className="inner px-[3.725vw] flex flex-col gap-5 py-10">
         {/* 게시물 헤더 */}
         <div className="post-header border-b pb-5">
           <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
