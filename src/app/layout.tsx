@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="ko">
       <body className={`${pretendard.variable} flex flex-col min-h-screen`}>
         <header className="top-bar bg-white border-b">
-          <div className="con h-20 flex max-w-[1200px] mx-auto">
+          <div className="con h-20 flex px-[3.725vw] mx-auto">
             <div className="logo-box">
               <Link
                 href={"/"}

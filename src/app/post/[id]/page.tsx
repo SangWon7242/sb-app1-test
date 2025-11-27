@@ -3,6 +3,7 @@ import { formatDate } from "@/app/utils/dateFormatter";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import MarkdownViewer from "@/components/viewer/MarkdownViewer";
 
 export default async function Page({
   params,
@@ -51,9 +52,7 @@ export default async function Page({
         {/* 게시물 본문 */}
         <div className="post-content">
           <div className="prose max-w-none">
-            <p className="text-lg leading-relaxed whitespace-pre-wrap">
-              {post.content}
-            </p>
+            <MarkdownViewer content={post.content} />
           </div>
         </div>
 

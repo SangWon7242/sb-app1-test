@@ -6,10 +6,7 @@ import { useState, useEffect } from "react";
 
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
-import dynamic from "next/dynamic";
-
-// MDEditor를 동적으로 import (SSR 비활성화)
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+import MDEditor from "@uiw/react-md-editor";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
