@@ -4,49 +4,23 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import MDEditor from "@uiw/react-md-editor";
 import { useSaveShortcut } from "@/app/hooks/useSaveShortcut";
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
-);
+import { usePost } from "@/app/hooks/usePost";
 
 export default function Page() {
   const router = useRouter();
 
+  const { createPost } = usePost();
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const handleSubmit = async () => {
-    if (!title.trim()) {
-      alert("제목을 입력해주세요.");
-      return;
-    }
-
-    if (!content.trim()) {
-      alert("내용을 입력해주세요.");
-      return;
-    }
-
-    const { error } = await supabase
-      .from("post")
-      .insert([{ title, content }])
-      .select()
-      .single();
-
-    if (error) {
-      console.error(error);
-      alert("글 저장 중 오류가 발생했습니다.");
-      return;
-    }
-
+  const handleSubmit = () => {
+    createPost(title, content);
     setTitle("");
     setContent("");
-
-    alert("글이 작성 되었습니다.");
     router.push("/");
   };
 
