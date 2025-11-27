@@ -55,7 +55,9 @@ export default async function Page({
               </div>
             </div>
             <div className="post-meta-right flex gap-2">
-              <Button className="cursor-pointer">수정</Button>
+              <Button className="cursor-pointer">
+                <Link href={`/post/edit/${post.id}`}>수정</Link>
+              </Button>
               <Button variant="outline" className="cursor-pointer">
                 삭제
               </Button>
