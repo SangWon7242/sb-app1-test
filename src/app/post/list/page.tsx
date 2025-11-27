@@ -1,6 +1,7 @@
 import { createClient } from "@/app/utils/supabase/server";
 import Link from "next/link";
 import styles from "./List.module.css";
+import { formatDate } from "@/app/utils/dateFormatter";
 
 export default async function Page() {
   const supabase = await createClient();
@@ -31,7 +32,7 @@ export default async function Page() {
             {data.map((post) => (
               <li key={post.id} className={styles["post-list"]}>
                 <Link href={`/post/${post.id}`} className={styles["link-text"]}>
-                  <div className={styles["post-id"]}>{post.id}</div>
+                  <div className={styles["post-id"]}>POST {post.id}</div>
                   <div className={styles["post-info"]}>
                     <div className={styles["profile-img"]}>^__^</div>
                     <div className="profile-info">
@@ -39,7 +40,7 @@ export default async function Page() {
                         유저1
                       </div>
                       <div className="post-writer-date text-sm">
-                        {post.created_at}
+                        {formatDate(post.created_at)}
                       </div>
                     </div>
                   </div>
