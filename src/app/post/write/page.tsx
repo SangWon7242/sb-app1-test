@@ -2,11 +2,12 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import MDEditor from "@uiw/react-md-editor";
+import { useSaveShortcut } from "@/app/hooks/useSaveShortcut";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -49,24 +50,7 @@ export default function Page() {
     router.push("/");
   };
 
-  // Ctrl + S 키보드 단축키 추가
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ctrl + S (Windows/Linux) 또는 Cmd + S (Mac)
-      if ((e.ctrlKey || e.metaKey) && e.key === "s") {
-        e.preventDefault(); // 브라우저 기본 저장 동작 방지
-        handleSubmit();
-      }
-    };
-
-    // 이벤트 리스너 등록
-    window.addEventListener("keydown", handleKeyDown);
-
-    // 컴포넌트 언마운트 시 이벤트 리스너 제거
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [title, content]); // title과 content가 변경될 때마다 최신 값을 참조
+  useSaveShortcut(handleSubmit, [title, content]);
 
   return (
     <section className="post-write flex flex-col w-full gap-4 p-2">

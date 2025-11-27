@@ -1,0 +1,129 @@
+import { useState } from "react";
+import { createClient } from "@supabase/supabase-js";
+import { useRouter } from "next/navigation";
+import { Post } from "@/app/types/post";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
+);
+
+export const usePost = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // 게시물 조회
+  const getPost = async (id: string): Promise<Post | null> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data, error } = await supabase
+        .from("post")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error) throw error;
+      return data;
+    } catch (err) {
+      const errorMessage = "게시물을 불러오는 중 오류가 발생했습니다.";
+      setError(errorMessage);
+      console.error(err);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 게시물 목록 조회
+  const getPosts = async (): Promise<Post[]> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data, error } = await supabase
+        .from("post")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data || [];
+    } catch (err) {
+      const errorMessage = "게시물 목록을 불러오는 중 오류가 발생했습니다.";
+      setError(errorMessage);
+      console.error(err);
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 게시물 작성
+  const createPost = async (
+    title: string,
+    content: string
+  ): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { error } = await supabase
+        .from("post")
+        .insert([{ title, content }])
+        .select()
+        .single();
+
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      const errorMessage = "글 저장 중 오류가 발생했습니다.";
+      setError(errorMessage);
+      console.error(err);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 게시물 수정
+  const updatePost = async (
+    id: string,
+    title: string,
+    content: string
+  ): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { error } = await supabase
+        .from("post")
+        .update({ title, content })
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      const errorMessage = "글 수정 중 오류가 발생했습니다.";
+      setError(errorMessage);
+      console.error(err);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 게시물 삭제
+
+  return {
+    loading,
+    error,
+    getPost,
+    getPosts,
+    createPost,
+    updatePost,
+  };
+};
