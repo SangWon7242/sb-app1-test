@@ -1,19 +1,13 @@
-import { createClient } from "@/app/utils/supabase/server";
 import Link from "next/link";
 import styles from "./list.module.css";
 import { formatDate } from "@/app/utils/dateFormatter";
 import { Badge } from "@/components/ui/badge";
+import { getPosts } from "@/app/services/PostService";
 
 export default async function Page() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("post").select("*");
+  const posts = await getPosts();
 
-  if (error) {
-    console.error(error);
-    return;
-  }
-
-  if (data.length === 0) {
+  if (!posts) {
     return (
       <section>
         <h1>게시글 리스트</h1>
@@ -30,7 +24,7 @@ export default async function Page() {
         <h1 className="text-2xl font-bold text-center">내글</h1>
         <nav className="post-menu-wrap">
           <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-            {data.map((post) => (
+            {posts.map((post) => (
               <li key={post.id} className={styles["post-list"]}>
                 <Link href={`/post/${post.id}`} className={styles["link-text"]}>
                   <div className="post-detail-header flex items-center w-full gap-2">

@@ -1,9 +1,8 @@
 import { formatDate } from "@/app/utils/dateFormatter";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import MarkdownViewer from "@/components/viewer/MarkdownViewer";
-import { usePost } from "@/app/hooks/usePost";
 import { getNumberParam } from "@/app/utils/numberFormatter";
 import { getPostById } from "@/app/services/PostService";
 

@@ -17,3 +17,19 @@ export async function getPostById(id: number): Promise<Post | null> {
 
   return data;
 }
+
+export async function getPosts(): Promise<Post[]> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("post")
+    .select("*")
+    .order("id", { ascending: false });
+
+  if (error) {
+    console.error("게시물 목록 조회 실패:", error);
+    return []; // null 대신 빈 배열 반환
+  }
+
+  return data || [];
+}
