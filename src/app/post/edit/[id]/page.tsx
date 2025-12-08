@@ -1,4 +1,4 @@
-import PostEditor from "./PostEditor.tsx";
+import PostEditor from "./PostEditor";
 
 export default async function Page({
   params,
