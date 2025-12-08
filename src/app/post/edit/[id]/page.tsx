@@ -7,5 +7,5 @@ export default async function Page({
 }) {
   const { id } = await params;
 
-  return <PostEditor id={id} />;
+  return <PostEditor paramId={id} />;
 }
