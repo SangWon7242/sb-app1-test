@@ -1,9 +1,11 @@
-import { createClient } from "@/app/utils/supabase/server";
 import { formatDate } from "@/app/utils/dateFormatter";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import MarkdownViewer from "@/components/viewer/MarkdownViewer";
+import { usePost } from "@/app/hooks/usePost";
+import { getNumberParam } from "@/app/utils/numberFormatter";
+import { getPostById } from "@/app/services/PostService";
 
 export default async function Page({
   params,
@@ -11,24 +13,18 @@ export default async function Page({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const supabase = await createClient();
+  const paramId = getNumberParam(id);
 
-  // 특정 ID의 게시물 가져오기
-  const { data: post, error } = await supabase
-    .from("post")
-    .select("*")
-    .eq("id", id)
-    .single(); // single()은 단일 객체를 반환 (배열이 아님)
-
-  // 에러 처리
-  if (error) {
-    console.error("게시물 조회 에러:", error);
-    notFound(); // 404 페이지로 이동
+  if (paramId === null) {
+    alert("id를 올바르게 입력해주세요.");
+    redirect("/post/list");
   }
 
-  // 게시물이 없는 경우
+  const post = await getPostById(paramId);
+
   if (!post) {
-    notFound();
+    alert(`${id}번 게시물은 존재하지 않습니다.`);
+    redirect("/post/list");
   }
 
   return (
@@ -46,10 +42,14 @@ export default async function Page({
               </div>
               <div className="author-info flex flex-col">
                 <span className="font-bold">유저1</span>
-                <div className="post-date">
-                  <span className="text-sm">{formatDate(post.created_at)}</span>
+                <div className="post-date flex gap-2">
+                  <span className="text-sm">
+                    작성일 : {formatDate(post.created_at)}
+                  </span>
                   {post.updated_at && (
-                    <span>수정일: {formatDate(post.updated_at)}</span>
+                    <span className="text-sm">
+                      수정일 : {formatDate(post.updated_at)}
+                    </span>
                   )}
                 </div>
               </div>
@@ -59,7 +59,7 @@ export default async function Page({
                 <Link href={`/post/edit/${post.id}`}>수정</Link>
               </Button>
               <Button variant="outline" className="cursor-pointer">
-                삭제
+                <Link href={`/post/delete/${post.id}`}>삭제</Link>
               </Button>
             </div>
           </div>
