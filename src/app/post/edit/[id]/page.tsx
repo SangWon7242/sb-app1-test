@@ -12,15 +12,13 @@ export default async function Page({
   const paramId = getNumberParam(id);
 
   if (paramId === null) {
-    alert("id를 올바르게 입력해주세요.");
-    redirect("/post/list");
+    redirect("/post/list?error=invalid_id"); // ✅ 에러 코드 사용
   }
 
   const post = await getPostById(paramId);
 
   if (!post) {
-    alert(`${id}번 게시물은 존재하지 않습니다.`);
-    redirect("/post/list");
+    redirect(`/post/list?error=not_found&id=${id}`); // ✅ 에러 코드 사용
   }
 
   return <PostEditor post={post} />;
