@@ -19,32 +19,27 @@ export default function PostEditor({ id }: PostEditorProps) {
 
   const [isInitialLoading, setIsInitialLoading] = useState(true);
 
-  const { loading, error, getPost } = usePost();
+  const { loading, error, getPost, updatePost } = usePost();
 
   // 게시물 데이터 불러오기
   useEffect(() => {
     const loadPost = async () => {
-      try {
-        const post = await getPost(id);
+      const post = await getPost(id);
 
-        if (post) {
-          setTitle(post.title);
-          setContent(post.content);
-        } else {
-          alert("게시물을 찾을 수 없습니다.");
-          router.push("/post/list");
-        }
-      } catch (error) {
-        console.error(error);
-        alert("게시물을 불러오는 중 오류가 발생했습니다.");
+      if (!post) {
+        // getPost가 null을 반환하면 이미 에러 처리됨
+        alert("게시물을 찾을 수 없습니다.");
         router.push("/post/list");
-      } finally {
-        setIsInitialLoading(false);
+        return;
       }
+
+      setTitle(post.title);
+      setContent(post.content);
+      setIsInitialLoading(false);
     };
 
     loadPost();
-  }, [id]); // id를 dependency로
+  }, [id]);
 
   const handleSubmit = async () => {
     if (!title.trim()) {
@@ -56,13 +51,20 @@ export default function PostEditor({ id }: PostEditorProps) {
       alert("내용을 입력해주세요.");
       return;
     }
+
+    const isSuccess = await updatePost(id, title, content);
+
+    if (isSuccess) {
+      alert(`${id}번 글이 수정되었습니다.`);
+      router.push(`/post/${id}`);
+    }
   };
 
   useSaveShortcut(handleSubmit, [title, content]);
 
   if (isInitialLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen w-full">
         <div className="text-lg">게시물을 불러오는 중...</div>
       </div>
     );

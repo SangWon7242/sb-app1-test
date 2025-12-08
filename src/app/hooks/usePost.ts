@@ -63,39 +63,40 @@ export const usePost = () => {
     }
   };
 
-  // // 게시물 수정
-  // const updatePost = async (
-  //   id: string,
-  //   title: string,
-  //   content: string
-  // ): Promise<boolean> => {
-  //   setLoading(true);
-  //   setError(null);
+  // 게시물 수정
+  const updatePost = async (
+    id: string,
+    title: string,
+    content: string
+  ): Promise<boolean> => {
+    setLoading(true);
+    setError(null);
 
-  //   try {
-  //     const { error } = await supabase
-  //       .from("post")
-  //       .update({ title, content })
-  //       .eq("id", id)
-  //       .select()
-  //       .single();
+    try {
+      const { error } = await supabase
+        .from("post")
+        .update({ title, content })
+        .eq("id", id)
+        .select()
+        .single();
 
-  //     if (error) throw error;
-  //     return true;
-  //   } catch (err) {
-  //     const errorMessage = "글 수정 중 오류가 발생했습니다.";
-  //     setError(errorMessage);
-  //     console.error(err);
-  //     return false;
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+      if (error) throw error;
+      return true;
+    } catch (err) {
+      const errorMessage = "글 수정 중 오류가 발생했습니다.";
+      setError(errorMessage);
+      console.error(err);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return {
     loading,
     error,
     getPost,
     createPost,
+    updatePost,
   };
 };
