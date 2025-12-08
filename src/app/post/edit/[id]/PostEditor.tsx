@@ -7,12 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useSaveShortcut } from "@/app/hooks/useSaveShortcut";
 import { usePost } from "@/app/hooks/usePost";
+import { getNumberParam } from "@/app/utils/numberFormatter";
 
 interface PostEditorProps {
-  id: string;
+  paramId: string;
 }
 
-export default function PostEditor({ id }: PostEditorProps) {
+export default function PostEditor({ paramId }: PostEditorProps) {
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -21,15 +22,23 @@ export default function PostEditor({ id }: PostEditorProps) {
 
   const { loading, error, getPost, updatePost } = usePost();
 
+  const id = getNumberParam(paramId);
+
   // 게시물 데이터 불러오기
   useEffect(() => {
+    if (id === null) {
+      alert("잘못된 게시물 ID입니다.");
+      router.replace("/post/list"); // replace : 기록을 남기지 않음
+      return;
+    }
+
     const loadPost = async () => {
       const post = await getPost(id);
 
       if (!post) {
         // getPost가 null을 반환하면 이미 에러 처리됨
         alert("게시물을 찾을 수 없습니다.");
-        router.push("/post/list");
+        router.replace("/post/list");
         return;
       }
 
@@ -39,18 +48,13 @@ export default function PostEditor({ id }: PostEditorProps) {
     };
 
     loadPost();
-  }, [id]);
+  }, [id, getPost, router]);
 
   const handleSubmit = async () => {
-    if (!title.trim()) {
-      alert("제목을 입력해주세요.");
-      return;
-    }
+    if (id === null) return;
 
-    if (!content.trim()) {
-      alert("내용을 입력해주세요.");
-      return;
-    }
+    if (!title.trim()) return alert("제목을 입력해주세요.");
+    if (!content.trim()) return alert("내용을 입력해주세요.");
 
     const isSuccess = await updatePost(id, title, content);
 

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 import { Post } from "@/app/types/post";
 
 const supabase = createClient(
@@ -13,7 +12,7 @@ export const usePost = () => {
   const [error, setError] = useState<string | null>(null);
 
   // 게시물 단건 조회
-  const getPost = async (id: string): Promise<Post | null> => {
+  const getPost = async (id: number): Promise<Post | null> => {
     setLoading(true);
     setError(null);
 
@@ -65,7 +64,7 @@ export const usePost = () => {
 
   // 게시물 수정
   const updatePost = async (
-    id: string,
+    id: number,
     title: string,
     content: string
   ): Promise<boolean> => {
