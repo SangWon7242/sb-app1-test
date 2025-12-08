@@ -1,5 +1,5 @@
 import { formatDate } from "@/app/utils/dateFormatter";
-import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import MarkdownViewer from "@/components/viewer/MarkdownViewer";
@@ -15,13 +15,13 @@ export default async function Page({
   const paramId = getNumberParam(id);
 
   if (paramId === null) {
-    notFound();
+    redirect("/post/list?error=invalid_id"); // ✅ 에러 코드 사용
   }
 
   const post = await getPostById(paramId);
 
   if (!post) {
-    notFound();
+    redirect(`/post/list?error=not_found&id=${id}`); // ✅ 에러 코드 사용
   }
 
   return (

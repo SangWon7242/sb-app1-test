@@ -4,22 +4,18 @@ import { formatDate } from "@/app/utils/dateFormatter";
 import { Badge } from "@/components/ui/badge";
 import { getPosts } from "@/app/services/PostService";
 
+import { Suspense } from "react";
+import PostListAlert from "./PostListAlert";
+
 export default async function Page() {
   const posts = await getPosts();
 
-  if (!posts) {
-    return (
-      <section>
-        <h1>게시글 리스트</h1>
-        <ul>
-          <li>등록된 글이 없습니다.</li>
-        </ul>
-      </section>
-    );
-  }
-
   return (
     <section className="post-list flex w-full flex-1">
+      <Suspense fallback={null}>
+        <PostListAlert />
+      </Suspense>
+
       <div className="inner container mx-auto flex flex-col gap-2 py-5">
         <h1 className="text-2xl font-bold text-center">내글</h1>
         <nav className="post-menu-wrap">
