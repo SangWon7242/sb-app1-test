@@ -9,11 +9,10 @@ const supabase = createClient(
 );
 
 export const usePost = () => {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // 게시물 조회
+  // 게시물 단건 조회
   const getPost = async (id: string): Promise<Post | null> => {
     setLoading(true);
     setError(null);
@@ -32,29 +31,6 @@ export const usePost = () => {
       setError(errorMessage);
       console.error(err);
       return null;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 게시물 목록 조회
-  const getPosts = async (): Promise<Post[]> => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const { data, error } = await supabase
-        .from("post")
-        .select("*")
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      return data || [];
-    } catch (err) {
-      const errorMessage = "게시물 목록을 불러오는 중 오류가 발생했습니다.";
-      setError(errorMessage);
-      console.error(err);
-      return [];
     } finally {
       setLoading(false);
     }
@@ -87,43 +63,39 @@ export const usePost = () => {
     }
   };
 
-  // 게시물 수정
-  const updatePost = async (
-    id: string,
-    title: string,
-    content: string
-  ): Promise<boolean> => {
-    setLoading(true);
-    setError(null);
+  // // 게시물 수정
+  // const updatePost = async (
+  //   id: string,
+  //   title: string,
+  //   content: string
+  // ): Promise<boolean> => {
+  //   setLoading(true);
+  //   setError(null);
 
-    try {
-      const { error } = await supabase
-        .from("post")
-        .update({ title, content })
-        .eq("id", id)
-        .select()
-        .single();
+  //   try {
+  //     const { error } = await supabase
+  //       .from("post")
+  //       .update({ title, content })
+  //       .eq("id", id)
+  //       .select()
+  //       .single();
 
-      if (error) throw error;
-      return true;
-    } catch (err) {
-      const errorMessage = "글 수정 중 오류가 발생했습니다.";
-      setError(errorMessage);
-      console.error(err);
-      return false;
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 게시물 삭제
+  //     if (error) throw error;
+  //     return true;
+  //   } catch (err) {
+  //     const errorMessage = "글 수정 중 오류가 발생했습니다.";
+  //     setError(errorMessage);
+  //     console.error(err);
+  //     return false;
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return {
     loading,
     error,
     getPost,
-    getPosts,
     createPost,
-    updatePost,
   };
 };

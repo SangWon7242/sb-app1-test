@@ -12,7 +12,7 @@ import { usePost } from "@/app/hooks/usePost";
 export default function Page() {
   const router = useRouter();
 
-  const { createPost } = usePost();
+  const { createPost, error } = usePost();
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -25,6 +25,11 @@ export default function Page() {
   };
 
   useSaveShortcut(handleSubmit, [title, content]);
+
+  if (error) {
+    alert(error);
+    return;
+  }
 
   return (
     <section className="post-write flex flex-col w-full gap-4 p-2">
