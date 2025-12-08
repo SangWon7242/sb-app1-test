@@ -23,7 +23,7 @@ export default async function Page() {
       <div className="inner container mx-auto flex flex-col gap-2 py-5">
         <h1 className="text-2xl font-bold text-center">내글</h1>
         <nav className="post-menu-wrap">
-          <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+          <ul className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
             {posts.map((post) => (
               <li key={post.id} className={styles["post-list"]}>
                 <Link href={`/post/${post.id}`} className={styles["link-text"]}>

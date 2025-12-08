@@ -1,9 +1,12 @@
-import { createClient } from "@/app/utils/supabase/server";
+import { createClient } from "@supabase/supabase-js";
 import { Post } from "@/app/types/post";
 
-export async function getPostById(id: number): Promise<Post | null> {
-  const supabase = await createClient();
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
+export async function getPostById(id: number): Promise<Post | null> {
   const { data, error } = await supabase
     .from("post")
     .select("*")
@@ -19,8 +22,6 @@ export async function getPostById(id: number): Promise<Post | null> {
 }
 
 export async function getPosts(): Promise<Post[]> {
-  const supabase = await createClient();
-
   const { data, error } = await supabase
     .from("post")
     .select("*")

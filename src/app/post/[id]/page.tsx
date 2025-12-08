@@ -1,5 +1,5 @@
 import { formatDate } from "@/app/utils/dateFormatter";
-import { redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import MarkdownViewer from "@/components/viewer/MarkdownViewer";
@@ -15,15 +15,13 @@ export default async function Page({
   const paramId = getNumberParam(id);
 
   if (paramId === null) {
-    alert("id를 올바르게 입력해주세요.");
-    redirect("/post/list");
+    notFound();
   }
 
   const post = await getPostById(paramId);
 
   if (!post) {
-    alert(`${id}번 게시물은 존재하지 않습니다.`);
-    redirect("/post/list");
+    notFound();
   }
 
   return (

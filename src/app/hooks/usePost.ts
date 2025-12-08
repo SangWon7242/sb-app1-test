@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { Post } from "@/app/types/post";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
