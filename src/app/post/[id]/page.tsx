@@ -5,6 +5,7 @@ import Link from "next/link";
 import MarkdownViewer from "@/components/viewer/MarkdownViewer";
 import { getNumberParam } from "@/app/utils/numberFormatter";
 import { getPostById } from "@/app/services/PostService";
+import DeleteButton from "./DeleteButton";
 
 export default async function Page({
   params,
@@ -55,9 +56,8 @@ export default async function Page({
               <Button className="cursor-pointer">
                 <Link href={`/post/edit/${post.id}`}>수정</Link>
               </Button>
-              <Button variant="outline" className="cursor-pointer">
-                <Link href={`/post/delete/${post.id}`}>삭제</Link>
-              </Button>
+              {/* ✅ 클라이언트 컴포넌트로 분리 */}
+              <DeleteButton id={post.id} />
             </div>
           </div>
         </div>
